@@ -198,6 +198,7 @@ public class CareContextLinkingServiceImpl implements CareContextLinkingService 
 			JsonParser jsnParser = new JsonParser();
 
 			if (null != addCareContextRequest.getLinkToken()) {
+				linkToken = addCareContextRequest.getLinkToken();
 				headers.add("X-LINK-TOKEN", addCareContextRequest.getLinkToken());
 			} else { // if link token is not found then fetch from mongo DB
 				GenerateTokenAbdmResponses mongoResponse = common_NDHMService
@@ -353,13 +354,14 @@ public class CareContextLinkingServiceImpl implements CareContextLinkingService 
 
 		int hasLabTests = careContextRepo.hasLabtestsDone(visitCode);
 		if (hasLabTests > 0) {
-			hiTypes.add("DiagnosticsReport");
+			hiTypes.add("DiagnoticsReport");
 		}
+		
 		int hasVaccineDetails = careContextRepo.hasVaccineDetails(visitCode);
 		if (hasVaccineDetails > 0) {
 			hiTypes.add("ImmunizationRecord");
 		}
-
+		logger.info("HiTypes", hiTypes);		
 		return hiTypes.toArray(new String[0]);
 	}
 
