@@ -118,7 +118,7 @@ public class HealthIDServiceImpl implements HealthIDService {
 				healthID.setProviderServiceMapID(jsonRequest.get("providerServiceMapId").getAsInt());
 				healthID.setIsNewAbha(jsonRequest.get("isNew").getAsBoolean());
 				healthIDRepo.save(healthID);
-				checkABHAIncentive(health.getBeneficiaryID(),0,health.getCreatedBy());
+				checkABHAIncentive(health.getBeneficiaryID(),userLoginRepo.getUserIdByUserName(health.getCreatedBy()),health.getCreatedBy());
 
 			}
 
@@ -147,7 +147,7 @@ public class HealthIDServiceImpl implements HealthIDService {
 				record.setUpdatedDate(createdDate);
 				record.setUpdatedBy(userName);
 				record.setBenId(benId);
-				record.setAshaId(0);
+				record.setAshaId(ashaId);
 				record.setAmount(Long.valueOf(activityForAbhaGeneration.getRate()));
 				recordRepo.save(record);
 			}
