@@ -118,7 +118,7 @@ public class HealthIDServiceImpl implements HealthIDService {
 				healthID.setProviderServiceMapID(jsonRequest.get("providerServiceMapId").getAsInt());
 				healthID.setIsNewAbha(jsonRequest.get("isNew").getAsBoolean());
 				healthIDRepo.save(healthID);
-				checkABHAIncentive(health.getBeneficiaryID(),0,health.getCreatedBy(),health.getCreatedDate());
+				checkABHAIncentive(health.getBeneficiaryID(),0,health.getCreatedBy());
 
 			}
 
@@ -128,14 +128,15 @@ public class HealthIDServiceImpl implements HealthIDService {
 		return new Gson().toJson(health);
 	}
 
-	private void checkABHAIncentive(Long benId, Integer ashaId, String userName, Timestamp createdDate) {
+	private void checkABHAIncentive(Long benId, Integer ashaId, String userName) {
 		IncentiveActivity activityForAbhaGeneration =
 				incentivesRepo.findIncentiveMasterByNameAndGroup("ABHA_ID_CREATION", "OTHER INCENTIVES");
 
+		Timestamp createdDate = new Timestamp(System.currentTimeMillis());
 
 		if (activityForAbhaGeneration != null) {
 			IncentiveActivityRecord record = recordRepo
-					.findRecordByActivityIdCreatedDateBenId(activityForAbhaGeneration.getId(), createdDate, benId);
+					.findRecordByActivityIdCreatedDateBenId(activityForAbhaGeneration.getId(),createdDate, benId);
 			if (record == null) {
 				record = new IncentiveActivityRecord();
 				record.setActivityId(activityForAbhaGeneration.getId());
