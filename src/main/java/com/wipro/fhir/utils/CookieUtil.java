@@ -24,7 +24,7 @@ public class CookieUtil {
 		return Optional.empty();
 	}
 
-	public String getJwtTokenFromCookie(HttpServletRequest request) {
+	public static String getJwtTokenFromCookie(HttpServletRequest request) {
 		return Arrays.stream(request.getCookies()).filter(cookie -> "Jwttoken".equals(cookie.getName()))
 				.map(Cookie::getValue).findFirst().orElse(null);
 	}
