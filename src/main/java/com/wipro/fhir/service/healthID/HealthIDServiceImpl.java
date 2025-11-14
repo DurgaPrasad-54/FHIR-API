@@ -164,7 +164,7 @@ public class HealthIDServiceImpl implements HealthIDService {
 			for(BenHealthIDMapping healthDetails: healthDetailsList) {
 				String healthIdNumber = healthDetails.getHealthIdNumber();
 				Boolean isNewAbha = benHealthIDMappingRepo.getIsNewAbha(healthIdNumber);
-				healthDetails.setIsNewAbha(isNewAbha);
+				healthDetails.setNewAbha(isNewAbha);
 
 				healthDetailsWithAbhaList.add(healthDetails);
 			}

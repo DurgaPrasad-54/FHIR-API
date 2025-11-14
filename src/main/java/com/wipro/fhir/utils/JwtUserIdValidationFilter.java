@@ -25,7 +25,7 @@ public class JwtUserIdValidationFilter implements Filter {
 	private final String allowedOrigins;
 
 	public JwtUserIdValidationFilter(JwtAuthenticationUtil jwtAuthenticationUtil,
-									 String allowedOrigins) {
+			String allowedOrigins) {
 		this.jwtAuthenticationUtil = jwtAuthenticationUtil;
 		this.allowedOrigins = allowedOrigins;
 	}

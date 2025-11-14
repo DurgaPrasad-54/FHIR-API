@@ -78,7 +78,4 @@ public class BenHealthIDMapping {
 	@Transient
 	private boolean isNewAbha;
 
-
-	public void setIsNewAbha(Boolean isNewAbha) {
-	}
 }
