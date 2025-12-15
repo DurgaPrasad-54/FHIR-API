@@ -319,20 +319,15 @@ public class CareContextLinkingServiceImpl implements CareContextLinkingService 
 			}
 
 			if (jsonString != null) {
-				try {
-					JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-					if (json.has("error")) {
-						JsonObject errorObj = json.getAsJsonObject("error");
-						String message = errorObj.has("message") ? errorObj.get("message").getAsString()
-								: "Unknown error";
-						throw new FHIRException(message);
-					}
-				} catch (Exception ex) {
-					throw new FHIRException("Error parsing API error response");
+				JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+				if (json.has("error")) {
+					JsonObject errorObj = json.getAsJsonObject("error");
+					String message = errorObj.has("message") ? errorObj.get("message").getAsString() : "Unknown error";
+					throw new FHIRException(message);
 				}
-			}
 
-			throw new FHIRException(e.getMessage());
+				throw new FHIRException(e.getMessage());
+			}
 		}
 
 		return new Gson().toJson(responseMap);
@@ -390,7 +385,7 @@ public class CareContextLinkingServiceImpl implements CareContextLinkingService 
 
 		int hasLabTests = careContextRepo.hasLabtestsDone(visitCode);
 		if (hasLabTests > 0) {
-			hiTypes.add("DiagnoticReport");
+			hiTypes.add("DiagnosticReport");
 		}
 		
 		int hasVaccineDetails = careContextRepo.hasVaccineDetails(visitCode);
