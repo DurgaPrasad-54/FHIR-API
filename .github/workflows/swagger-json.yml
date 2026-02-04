@@ -1,5 +1,12 @@
 name: Sync Swagger to AMRIT-Docs
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: none
+  packages: none
+  checks: none
+
 on:
   push:
     branches: [ main ]
