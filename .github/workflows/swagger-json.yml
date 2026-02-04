@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - name: Checkout API repo
-        # Pin to commit SHA for actions/checkout v4.1.0
-        uses: actions/checkout@caa6c9e2e6b4e4e3e7e6e6e6e6e6e6e6e6e6e6e6
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Java 17
-        # Pin to commit SHA for actions/setup-java v4.2.1
-        uses: actions/setup-java@a9b4c8e2e6b4e4e3e7e6e6e6e6e6e6e6e6e6e6e6
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
@@ -38,16 +38,12 @@ jobs:
 
       - name: Wait for API & fetch Swagger
         run: |
-          for i in {1..30}; do
+          for i in {1..20}; do
             CODE=$(curl --connect-timeout 2 --max-time 5 -s -o swagger_raw.json -w "%{http_code}" http://localhost:9090/v3/api-docs || true)
             if [ "$CODE" = "200" ]; then
-              if jq . swagger_raw.json > fhir-api.json; then
-                echo "Swagger generated successfully"
-                exit 0
-              else
-                echo "Failed to parse swagger_raw.json with jq"
-                exit 1
-              fi
+              jq . swagger_raw.json > fhir-api.json
+              echo "Swagger generated"
+              exit 0
             fi
             echo "Waiting for API... ($i)"
             sleep 5
@@ -65,8 +61,7 @@ jobs:
           fi
 
       - name: Checkout AMRIT-Docs
-        # Pin to commit SHA for actions/checkout v4.1.0
-        uses: actions/checkout@caa6c9e2e6b4e4e3e7e6e6e6e6e6e6e6e6e6e6e6
+        uses: actions/checkout@v4
         with:
           repository: PSMRI/AMRIT-Docs
           token: ${{ secrets.DOCS_REPO_TOKEN }}
@@ -78,15 +73,13 @@ jobs:
           cp fhir-api.json amrit-docs/docs/swagger/fhir-api.json
 
       - name: Create Pull Request
-        # Pin to commit SHA for peter-evans/create-pull-request v6.0.2
-        uses: peter-evans/create-pull-request@e7e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.DOCS_REPO_TOKEN }}
           path: amrit-docs
           branch: auto/swagger-update-${{ github.run_id }}
           base: main
-          commit-message: Auto-update FHIR-API swagger
-          title: Auto-update FHIR-API swagger
+          commit-message: "docs(swagger): auto-update FHIR-API"
+          title: "docs(swagger): auto-update FHIR-API"
           body: |
-            This PR automatically updates the FHIR-API Swagger JSON
-            from the latest main branch build.
+            Automated Swagger sync from FHIR-API main branch.
